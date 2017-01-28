@@ -1,13 +1,14 @@
-import cv2
-
 import os
 import pickle
-import cv2
 import numpy as np
+import cv2
+
+CAMERA_CALIBRATION_COEFFICIENTS_FILE = '../camera_cal/calibrated_data.p'
 
 
 class CameraCalibrator:
-    def __init__(self, calibration_images, no_corners_x_dir, no_corners_y_dir):
+    def __init__(self, calibration_images, no_corners_x_dir, no_corners_y_dir,
+                 use_existing_camera_coefficients=True):
         """
 
         :param calibration_images:
@@ -20,9 +21,10 @@ class CameraCalibrator:
         self.object_points = []
         self.image_points = []
 
-        self.calibrated_data_path = '../camera_cal/calibrated_data.p'
+        if not use_existing_camera_coefficients:
+            self._calibrate()
 
-    def calibrate(self):
+    def _calibrate(self):
         """
 
         :return:
@@ -43,24 +45,27 @@ class CameraCalibrator:
         image_size = (image.shape[1], image.shape[0])
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(self.object_points,
                                                            self.image_points, image_size, None, None)
-        calibrated_data = {'mtx': mtx, 'dist': dict}
+        calibrated_data = {'mtx': mtx, 'dist': dist}
 
-        with open(self.calibrated_data_path, 'wb') as f:
+        with open(CAMERA_CALIBRATION_COEFFICIENTS_FILE, 'wb') as f:
             pickle.dump(calibrated_data, file=f)
 
     def undistort(self, image):
 
-        if not os.path.exists(self.calibrated_data_path):
-            raise Exception('xxx')
+        if not os.path.exists(CAMERA_CALIBRATION_COEFFICIENTS_FILE):
+            raise Exception('Camera calibration data file does not exist at ' +
+                            CAMERA_CALIBRATION_COEFFICIENTS_FILE)
 
-        with open(self.calibrated_data_path, 'rb') as f:
+        with open(CAMERA_CALIBRATION_COEFFICIENTS_FILE, 'rb') as f:
             calibrated_data = pickle.load(file=f)
 
         image = cv2.imread(image)
         return cv2.undistort(image, calibrated_data['mtx'], calibrated_data['dist'],
                              None, calibrated_data['mtx'])
 
+
 class PerspectiveTransformer:
+
     def __init__(self, src_points, dest_points):
         """
 
@@ -82,23 +87,29 @@ class PerspectiveTransformer:
         size = (image.shape[1], image.shape[0])
         return cv2.warpPerspective(image, self.M, size, flags=cv2.INTER_LINEAR)
 
-    def inverse_transform(self, image):
+    def inverse_transform(self, src_image):
         """
 
-        :param image:
+        :param src_image:
         :return:
         """
-        size = (image.shape[1], image.shape[0])
-        return cv2.warpPerspective(image, self.M_inverse, size, flags=cv2.INTER_LINEAR)
+        size = (src_image.shape[1], src_image.shape[0])
+        return cv2.warpPerspective(src_image, self.M_inverse, size, flags=cv2.INTER_LINEAR)
+
+
+
 
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
     import numpy as np
     import glob
 
-    #mport CameraCalibrator.CameraCalibrator
+    # mport CameraCalibrator.CameraCalibrator
 
     image = cv2.imread('../test_images/test2.jpg')
+
+    plt.imshow(plt.imread('../test_images/test2.jpg'))
+    plt.show()
 
     corners = np.float32([[190, 720], [589, 457], [698, 457], [1145, 720]])
     new_top_left = np.array([corners[0, 0], 0])
@@ -111,28 +122,21 @@ if __name__ == '__main__':
 
     images = glob.glob('../camera_cal/calibration*.jpg')
 
-    calibrator = CameraCalibrator(images, 9, 6);
-    # calibrator.calibrate()
-    undistorted = calibrator.undistort('../test_images/test2.jpg')
+    calibrator = CameraCalibrator(images, 9, 6, use_existing_camera_coefficients=False);
+    undistorted = calibrator.undistort('../camera_cal/calibration1.jpg')
     pers = PerspectiveTransformer(src, dst)
     undistorted = pers.transform(undistorted)
 
-
-
-    #plt.imshow(plt.imread('../test_images/straight_lines1.jpg'))
-    #plt.plot(corners[0][0], corners[0][1], '.')
-    #plt.plot(corners[1][0], corners[1][1], '.')
-    #plt.plot(corners[2][0], corners[2][1], '.')
-    #plt.plot(corners[3][0], corners[3][1], '.')
+    # plt.imshow(plt.imread('../test_images/straight_lines1.jpg'))
+    # plt.plot(corners[0][0], corners[0][1], '.')
+    # plt.plot(corners[1][0], corners[1][1], '.')
+    # plt.plot(corners[2][0], corners[2][1], '.')
+    # plt.plot(corners[3][0], corners[3][1], '.')
 
     cv2.line(undistorted, (dst[0][0], dst[0][1]), (dst[1][0], dst[1][1]), color=[255, 0, 0], thickness=5)
     plt.imshow(undistorted)
 
-    #plt.plot(dst[0], dst[1], 'k-')
+    # plt.plot(dst[0], dst[1], 'k-')
 
 
     plt.show()
-
-
-
-
