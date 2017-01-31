@@ -244,7 +244,8 @@ if __name__ == '__main__':
     #
     # plt.show()
 
-    img = plt.imread('../output_images/undistorted_test_images/straight_lines2.jpg')
-    plt.imshow(img)
+    img = plt.imread('../output_images/undistorted_test_images/test1.jpg')
+    img_two = image_binarize(img, gray_thresh=(30, 255), s_thresh=(120, 255), l_thresh=(120, 255))
+    plt.imshow(img_two)
 
     plt.show()
