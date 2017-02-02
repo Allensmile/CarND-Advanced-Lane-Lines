@@ -59,7 +59,7 @@ class CameraCalibrator:
         with open(CAMERA_CALIBRATION_COEFFICIENTS_FILE, 'rb') as f:
             calibrated_data = pickle.load(file=f)
 
-        image = cv2.imread(image)
+        #image = cv2.imread(image)
         return cv2.undistort(image, calibrated_data['mtx'], calibrated_data['dist'],
                              None, calibrated_data['mtx'])
 
@@ -244,8 +244,8 @@ if __name__ == '__main__':
     #
     # plt.show()
 
-    img = plt.imread('../output_images/undistorted_test_images/test1.jpg')
-    img_two = image_binarize(img, gray_thresh=(30, 255), s_thresh=(120, 255), l_thresh=(120, 255))
-    plt.imshow(img_two)
+    img = plt.imread('../output_images/undistorted_test_images/straight_lines2.jpg')
+    #img_two = image_binarize(img, gray_thresh=(30, 255), s_thresh=(120, 255), l_thresh=(120, 255))
+    plt.imshow(img)
 
     plt.show()
