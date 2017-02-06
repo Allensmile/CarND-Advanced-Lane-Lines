@@ -84,7 +84,6 @@ class CameraCalibrator:
 
 
 class PerspectiveTransformer:
-
     def __init__(self, src_points, dest_points):
         """
 
@@ -184,31 +183,14 @@ def image_binarize(image, gray_thresh=(20, 255), s_thresh=(170, 255), l_thresh=(
 # Define a class to receive the characteristics of each line detection
 class Line():
     def __init__(self):
-        # was the line detected in the last iteration?
-        self.detected = False
-        # x values of the last n fits of the line
-        # self.recent_xfitted = []
-        # average x values of the fitted line over the last n iterations
-        # self.bestx = None
-        # polynomial coefficients averaged over the last n iterations
-        # self.best_fit = None
-        # polynomial coefficients for the most recent fit
-        # self.current_fit = [np.array([False])]
-        # radius of curvature of the line in some units
-        # self.radius_of_curvature = None
-        # distance in meters of vehicle center from the line
-        # self.line_base_pos = None
-        # difference in fit coefficients between last and new fits
-        # self.diffs = np.array([0, 0, 0], dtype='float')
-        # x values for detected line pixels
-        # self.allx = None
-        # y values for detected line pixels
-        # self.ally = None
 
-        self.fit_leftx = None
-        self.fit_rightx = None
+        self.detected = False
+
+        self.fit_left_x = None
+        self.fit_right_x = None
 
         self.MAX_BUFFER_SIZE = 12
+
         self.buffer_index = 0
         self.iter_counter = 0
 
@@ -218,7 +200,8 @@ class Line():
         self.perspective = self._build_perspective_transformer()
         self.calibrator = self._build_camera_calibrator()
 
-    def _build_perspective_transformer(self):
+    @staticmethod
+    def _build_perspective_transformer():
         corners = np.float32([[253, 697], [585, 456], [700, 456], [1061, 690]])
         new_top_left = np.array([corners[0, 0], 0])
         new_top_right = np.array([corners[3, 0], 0])
@@ -230,7 +213,8 @@ class Line():
         perspective = PerspectiveTransformer(src, dst)
         return perspective
 
-    def _build_camera_calibrator(self):
+    @staticmethod
+    def _build_camera_calibrator():
         calibration_images = glob.glob('../camera_cal/calibration*.jpg')
         calibrator = CameraCalibrator(calibration_images,
                                       9, 6, use_existing_camera_coefficients=True)
