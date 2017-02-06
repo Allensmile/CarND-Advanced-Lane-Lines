@@ -1,9 +1,11 @@
+import glob
 import os
 import pickle
 
 import cv2
 import numpy as np
 
+# we store camera calibration parameters in the following file
 CAMERA_CALIBRATION_COEFFICIENTS_FILE = '../camera_cal/calibrated_data.p'
 
 
@@ -12,9 +14,19 @@ class CameraCalibrator:
                  use_existing_camera_coefficients=True):
         """
 
+        This class encapsulates camera calibration process. When creating an instance of
+        CameraCalibrator class, if use_existing_camera_coefficients is False,  __calibrate()
+        method is called and save camera calibration coefficients.
+
         :param calibration_images:
+            The list of image used for camera calibration
+
         :param no_corners_x_dir:
+            The number of horizontal corners in calibration images
+
         :param no_corners_y_dir:
+            The number of vertical corners in calibration images
+
         """
         self.calibration_images = calibration_images
         self.no_corners_x_dir = no_corners_x_dir
@@ -29,6 +41,7 @@ class CameraCalibrator:
         """
 
         :return:
+            Camera calibration coefficients as a python dictionary
         """
         object_point = np.zeros((self.no_corners_x_dir * self.no_corners_y_dir, 3), np.float32)
         object_point[:, :2] = np.mgrid[0:self.no_corners_x_dir, 0:self.no_corners_y_dir].T.reshape(-1, 2)
@@ -52,6 +65,11 @@ class CameraCalibrator:
             pickle.dump(calibrated_data, file=f)
 
     def undistort(self, image):
+        """
+
+        :param image:
+        :return:
+        """
 
         if not os.path.exists(CAMERA_CALIBRATION_COEFFICIENTS_FILE):
             raise Exception('Camera calibration data file does not exist at ' +
@@ -66,6 +84,7 @@ class CameraCalibrator:
 
 
 class PerspectiveTransformer:
+
     def __init__(self, src_points, dest_points):
         """
 
@@ -95,46 +114,6 @@ class PerspectiveTransformer:
         """
         size = (src_image.shape[1], src_image.shape[0])
         return cv2.warpPerspective(src_image, self.M_inverse, size, flags=cv2.INTER_LINEAR)
-
-
-def abs_sobel_thresh(img, orient='x', sobel_kernel=3, thresh=(0, 10)):
-    gray_img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-    if orient == 'x':
-        abs_sobel = np.absolute(cv2.Sobel(gray_img, cv2.CV_64F, 1, 0, ksize=sobel_kernel))
-    else:
-        abs_sobel = np.absolute(cv2.Sobel(gray_img, cv2.CV_64F, 0, 1))
-    scaled_sobel = np.uint8(255 * abs_sobel / np.max(abs_sobel))
-    binary_output = np.zeros_like(scaled_sobel)
-    binary_output[(scaled_sobel >= thresh[0]) & (scaled_sobel <= thresh[1])] = 1
-    return binary_output
-
-
-def mag_thresh(image, sobel_kernel=3, thresh=(0, 255)):
-    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-
-    grad_x = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobel_kernel)
-    grad_y = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobel_kernel)
-
-    abs_sobelxy = np.sqrt(grad_x * grad_x + grad_y * grad_y)
-    scaled_sobel = np.uint8(255 * abs_sobelxy / np.max(abs_sobelxy))
-    binary_output = np.zeros_like(scaled_sobel)
-    binary_output[(scaled_sobel >= thresh[0]) & (scaled_sobel <= thresh[1])] = 1
-
-    return binary_output
-
-
-def dir_threshold(image, sobel_kernel=3, thresh=(0, np.pi / 2)):
-    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-    grad_x = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobel_kernel)
-    grad_y = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobel_kernel)
-
-    abs_sobelx = np.sqrt(grad_x * grad_x)
-    abs_sobely = np.sqrt(grad_y * grad_y)
-
-    absgraddir = np.arctan2(np.absolute(abs_sobely), np.absolute(abs_sobelx))
-    binary_output = np.zeros_like(absgraddir)
-    binary_output[(absgraddir >= thresh[0]) & (absgraddir <= thresh[1])] = 1
-    return binary_output
 
 
 def binary_noise_reduction(img, thresh=4):
@@ -208,23 +187,23 @@ class Line():
         # was the line detected in the last iteration?
         self.detected = False
         # x values of the last n fits of the line
-        self.recent_xfitted = []
+        # self.recent_xfitted = []
         # average x values of the fitted line over the last n iterations
-        self.bestx = None
+        # self.bestx = None
         # polynomial coefficients averaged over the last n iterations
-        self.best_fit = None
+        # self.best_fit = None
         # polynomial coefficients for the most recent fit
-        self.current_fit = [np.array([False])]
+        # self.current_fit = [np.array([False])]
         # radius of curvature of the line in some units
-        self.radius_of_curvature = None
+        # self.radius_of_curvature = None
         # distance in meters of vehicle center from the line
-        self.line_base_pos = None
+        # self.line_base_pos = None
         # difference in fit coefficients between last and new fits
-        self.diffs = np.array([0, 0, 0], dtype='float')
+        # self.diffs = np.array([0, 0, 0], dtype='float')
         # x values for detected line pixels
-        self.allx = None
+        # self.allx = None
         # y values for detected line pixels
-        self.ally = None
+        # self.ally = None
 
         self.fit_leftx = None
         self.fit_rightx = None
@@ -241,8 +220,6 @@ class Line():
 
     def _build_perspective_transformer(self):
         corners = np.float32([[253, 697], [585, 456], [700, 456], [1061, 690]])
-        # corners = np.float32([[253, 697],[598,448],[686, 448],[1061,690]])
-        # corners = np.float32([[253, 697],[573,464],[712, 464],[1061,690]])
         new_top_left = np.array([corners[0, 0], 0])
         new_top_right = np.array([corners[3, 0], 0])
         offset = [50, 0]
@@ -451,78 +428,6 @@ class Line():
 
 
 if __name__ == '__main__':
-    import numpy as np
-    import glob
-
-    # # mport CameraCalibrator.CameraCalibrator
-    #
-    # image = cv2.imread('../test_images/test2.jpg')
-    #
-    # plt.imshow(plt.imread('../test_images/test2.jpg'))
-    # plt.show()
-    #
-    # corners = np.float32([[190, 720], [589, 457], [698, 457], [1145, 720]])
-    # new_top_left = np.array([corners[0, 0], 0])
-    # new_top_right = np.array([corners[3, 0], 0])
-    # offset = [150, 0]
-    #
-    # img_size = (image.shape[1], image.shape[0])
-    # src = np.float32([corners[0], corners[1], corners[2], corners[3]])
-    # dst = np.float32([corners[0] + offset, new_top_left + offset, new_top_right - offset, corners[3] - offset])
-    #
-    # images = glob.glob('../camera_cal/calibration*.jpg')
-    #
-    # calibrator = CameraCalibrator(images, 9, 6, use_existing_camera_coefficients=False);
-    # undistorted = calibrator.undistort('../camera_cal/calibration1.jpg')
-    # pers = PerspectiveTransformer(src, dst)
-    # undistorted = pers.transform(undistorted)
-    #
-    # # plt.imshow(plt.imread('../test_images/straight_lines1.jpg'))
-    # # plt.plot(corners[0][0], corners[0][1], '.')
-    # # plt.plot(corners[1][0], corners[1][1], '.')
-    # # plt.plot(corners[2][0], corners[2][1], '.')
-    # # plt.plot(corners[3][0], corners[3][1], '.')
-    #
-    # cv2.line(undistorted, (dst[0][0], dst[0][1]), (dst[1][0], dst[1][1]), color=[255, 0, 0], thickness=5)
-    # plt.imshow(undistorted)
-    #
-    # # plt.plot(dst[0], dst[1], 'k-')
-    #
-    #
-    # plt.show()
-
-    # sample_image_file = '../test_images/test5.jpg'
-    # img = mpimg.imread(sample_image_file)
-    # img = image_binarize(img, gray_thresh=(50, 100), s_thresh = (170, 255))
-
-    # sample_image_file = '../test_images/test5.jpg'
-    # img_two = mpimg.imread(sample_image_file)
-    # img_two = image_binarize(img_two, gray_thresh = (20, 100), s_thresh = (120, 255), l_thresh = (40, 255))
-    #
-    # plt.subplot(1, 2, 1)
-    # plt.imshow(img, cmap='gray')
-    #
-    # plt.subplot(1, 2, 2)
-    # plt.imshow(img_two, cmap='gray')
-    #
-    # plt.show()
-
-    # import matplotlib.pyplot as plt
-    # import matplotlib.image as mpimg
-    #
-    # img = mpimg.imread('../test_images/test5.jpg')
-    # line = Line()
-    # plt.imshow(line.process(img))
-    # plt.show()
-    #plt.imshow()
-    # #img_two = image_binarize(img, gray_thresh=(30, 255), s_thresh=(120, 255), l_thresh=(120, 255))
-    # #plt.imshow(img)
-    #
-
-    # p = line.process(img)
-    # plt.imshow(p)
-    # plt.show()
-
     from moviepy.editor import VideoFileClip
 
     line = Line()
