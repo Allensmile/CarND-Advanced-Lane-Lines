@@ -136,59 +136,70 @@ def binary_noise_reduction(img, thresh=4):
     return img
 
 
-def binarize(image, gray_thresh=(20, 255), s_thresh=(170, 255), l_thresh=(30, 255)):
+def binarize(image, gray_thresh=(20, 255), s_thresh=(170, 255), l_thresh=(30, 255), sobel_kernel=3):
     """
+    This method extracts lane line pixels from road an image. Then create a minarized image where
+    lane lines are marked in white color and rest of the image is marked in black color.
 
     :param image:
+        Source image
+
     :param gray_thresh:
+        Minimum and maximum gray color threshold
+
     :param s_thresh:
+        This tuple contains the minimum and maximum S color threshold in HLS color scheme
+
     :param l_thresh:
+        Minimum and maximum L color (after converting image to HLS color scheme)
+        threshold allowed in the source image
+
+    :param sobel_kernel:
+        Size of the kernel use by the Sobel operation.
+
     :return:
+        The binarized image where lane line pixels are marked in while color and rest of the image
+        is marked in block color.
     """
+
+    # first we take a copy of the source iamge
     image_copy = np.copy(image)
 
-    # Grayscale image
-    # NOTE: we already saw that standard grayscaling lost color information for the lane lines
-    # Explore gradients in other colors spaces / color channels to see what might work better
-    gray = cv2.cvtColor(image_copy, cv2.COLOR_RGB2GRAY)
-
+    # convert RGB image to HLS color space.
+    # HLS more reliable when it comes to find out lane lines
     hls = cv2.cvtColor(image_copy, cv2.COLOR_RGB2HLS)
     s_channel = hls[:, :, 2]
     l_channel = hls[:, :, 1]
 
-    # Sobel x
-    sobelx = cv2.Sobel(l_channel, cv2.CV_64F, 1, 0)  # Take the derivative in x
-    abs_sobelx = np.absolute(sobelx)  # Absolute x derivative to accentuate lines away from horizontal
+    # Next, we apply Sobel operator in X direction and calculate scaled derivatives.
+    sobelx = cv2.Sobel(l_channel, cv2.CV_64F, 1, 0, ksize=sobel_kernel)
+    abs_sobelx = np.absolute(sobelx)
     scaled_sobel = np.uint8(255 * abs_sobelx / np.max(abs_sobelx))
 
-    # Threshold x gradient
+    # Next, we generate a binary image based on gray_thresh values.
     thresh_min = gray_thresh[0]
     thresh_max = gray_thresh[1]
-    sxbinary = np.zeros_like(scaled_sobel)
-    sxbinary[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
+    sobel_x_binary = np.zeros_like(scaled_sobel)
+    sobel_x_binary[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
 
-    # Threshold color channel
+    # Next, we generated a binary image using S component of our HLS color scheme and
+    # provided S threshold
+    s_binary = np.zeros_like(s_channel)
     s_thresh_min = s_thresh[0]
     s_thresh_max = s_thresh[1]
-
-    s_binary = np.zeros_like(s_channel)
     s_binary[(s_channel >= s_thresh_min) & (s_channel <= s_thresh_max)] = 1
 
-    # Stack each channel to view their individual contributions in green and blue respectively
-    # This returns a stack of the two binary images, whose components you can see as different colors
-    # color_binary = np.dstack((np.zeros_like(sxbinary), sxbinary, s_binary))
-
+    # Next, we generated a binary image using S component of our HLS color scheme and
+    # provided S threshold
     l_binary = np.zeros_like(l_channel)
     l_thresh_min = l_thresh[0]
     l_thresh_max = l_thresh[1]
     l_binary[(l_channel >= l_thresh_min) & (l_channel <= l_thresh_max)] = 1
 
-    # Combine the two binary thresholds
-    channels = 255 * np.dstack((l_binary, sxbinary, s_binary)).astype('uint8')
-    binary = np.zeros_like(sxbinary)
-    binary[((l_binary == 1) & (s_binary == 1) | (sxbinary == 1))] = 1
+    # finally, return the combined binary image
+    binary = np.zeros_like(sobel_x_binary)
+    binary[((l_binary == 1) & (s_binary == 1) | (sobel_x_binary == 1))] = 1
     binary = 255 * np.dstack((binary, binary, binary)).astype('uint8')
-    # return binary, channels
 
     return binary_noise_reduction(binary)
 
