@@ -533,8 +533,8 @@ if __name__ == '__main__':
     from moviepy.editor import VideoFileClip
 
     line = Line()
-    out_dir = '../'
-    output = out_dir + 'processed_project_video.mp4'
-    clip = VideoFileClip("../project_video.mp4")
+    output_file = '../processed_project_video.mp4'
+    input_file = '../project_video.mp4'
+    clip = VideoFileClip(input_file)
     out_clip = clip.fl_image(line.process)
-    out_clip.write_videofile(output, audio=False)
+    out_clip.write_videofile(output_file, audio=False)
