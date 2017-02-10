@@ -42,10 +42,10 @@ Warped operation is encapsulated in **`PerspectiveTransformer`** class of the **
 
 |Source Points | Destination Points|
 |--------------|-------------------|
-|(253, 697)      |    (303, 697)       |
-|(585, 456)      |(303, 0)             |
-|(700, 456)      |(1011, 0)            |
-|(1061, 690)     |(1011, 690)          |
+|(253, 697)    |   (303, 697)      |
+|(585, 456)    |   (303, 0)        |
+|(700, 456)    |   (1011, 0)       |
+|(1061, 690)   |   (1011, 690)     |
 
 
 I verified the performance of my perspective transformation by transforming an image (**`../output_images/undistorted_test_images/straight_lines2.jpg`**) using above source and destination points as given below.
@@ -56,7 +56,47 @@ I verified the performance of my perspective transformation by transforming an i
 
 ### Binarizer
 
+Correctly identifying lane line pixels is one of the main tasks of this project. In order to identify lane line, we have used three main techniques namely:
+
+1. Sobel operation in X direction
+2. Color thresholding in S component of the HLS color space.
+3. Color thresholding in L component of the HLS color space.
+
+These three operations are encapsulated in the method called **`binarize`** in **`advanced_lane_finding.py`** module located in **`$PROJECT_HOME/src`** folder.
+
+Also, below shows the `binarize` operation applied to a sample image.
+
+<p align="center">
+ <img src="./images/binarizer.png">
+</p>
+
 ### Lane Line Extractor
+
+Now we have extracted lane line pixels. So next step would be calculating the road curvature and other necessary quantities (such as how much the vehicle off from the center of the lane)
+
+In order to calculate road curvature, we have used two methods as given below.
+1. **`naive_lane_extractor(self, binary_warped)`** (inside the **Line** class in advanced_line_finding module)
+2. **`smart_lane_extractor(self, binary_warped)`** (inside the **Line** class in advanced_line_finding module
+
+Both methods take a binary warped image (similar to one shown above) and produce X coordinates of both left and right lane lines. `naive_lane_extractor(self, binary_warped)` method uses **sliding window** to identify lane lines from the binary warped image and then uses a second order polynomial estimation technique to calculate road curvature. 
+
+In this section, we explain the algorithm we used in the **`naive_lane_extractor(self, binary_warped)`** method.
+
+* **`naive_lane_extractor(self, binary_warped)`** algorithm expects a binary warped image such as one shown below.
+
+<p align="center">
+ <img src="./images/binary_input.png">
+</p>
+
+* Next, we calculate a histogram of pixel intencities using the first half (starting from the bottom of the image) the image as shown below.
+
+<p align="center">
+ <img src="./images/histogram.png">
+</p>
+
+
+
+
 
 ### Lane Line Curvature Calculator
 
