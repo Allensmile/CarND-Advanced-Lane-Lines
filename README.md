@@ -15,9 +15,10 @@ Image | Video
 ------------|---------------
 ![image_output](./images/image_output.png) | ![video_output](./images/video_output.gif)
 
+Next, we are going to describe our pipeline stages starting from the Camera Calibrator.
 
 
-
+-----------------------------------------------------------------------------
 ## Advanced Lane Finding
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
