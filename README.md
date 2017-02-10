@@ -56,6 +56,20 @@ I verified the performance of my perspective transformation by transforming an i
 
 ### Binarizer
 
+Correctly identifying lane line pixels is one of the main tasks of this project. In order to identify lane line, we have used three main techniques namely:
+
+1. Sobel operation in X direction
+2. Color thresholding in S component of the HLS color space.
+3. Color thresholding in L component of the HLS color space.
+
+These three operations are encapsulated in the method called **`binarize`** in **`advanced_lane_finding.py`** module located in **`$PROJECT_HOME/src`** folder.
+
+Also, below shows the `binarize` operation applied to a sample image.
+
+<p align="center">
+ <img src="./images/binarizer.png">
+</p>
+
 ### Lane Line Extractor
 
 ### Lane Line Curvature Calculator
