@@ -3,6 +3,11 @@
 ## Advanced Lane Finding
 
 ### Overview
+The objective of this project is to identify lane lines using traditional computer vision techniques. In order to achieve this, we have designed a computer vision pipeline as depicted below.
+
+
+
+
 
 ## Advanced Lane Finding
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
