@@ -32,6 +32,32 @@ The public method of this **`CameraCalibrator`** class is **`undistort`** and it
  <img src="./images/camera_calibrator.png">
 </p>
 
+### Warp Transformer
+
+The second step of the lane line finding pipeline is "perspective transformation" step. In computer vision,  an image perspective is a phenomenon where objects appear smaller the further away they are from a viewpoint.   
+
+A perspective transform maps the points in a given image to different, desired, image points with a new perspective. In the project we are going to use bird’s-eye view transform that allows us to view a lane from above; this will be useful for calculating the lane curvature in step 4.
+
+Warped operation is encapsulated in **`PerspectiveTransformer`** class of the **`advanced_lane_finding.py`** package located in **`$PROJECT_HOME/src`** folder. In order to create an instance of **`PerspectiveTransformer`**  class, we need to provide four source and destination points. In order to clearly visible lane lines, we have selected following source and destination points. 
+
+|Source Points | Destination Points|
+|--------------|-------------------|
+|(253, 697)      |    (303, 697)       |
+|(585, 456)      |(303, 0)             |
+|(700, 456)      |(1011, 0)            |
+|(1061, 690)     |(1011, 690)          |
+
+
+I verified the performance of my perspective transformation by transforming an image (**`../output_images/undistorted_test_images/straight_lines2.jpg`**) using above source and destination points as given below.
+
+### Binarizer
+
+### Lane Line Extractor
+
+### Lane Line Curvature Calculator
+
+### Highlighted Lane Line and Lane Line Information
+
 -----------------------------------------------------------------------------
 ## Advanced Lane Finding
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
