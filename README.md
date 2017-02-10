@@ -28,6 +28,10 @@ Camera calibration logic is encapsulated in **`CameraCalibrator`** class in the 
 
 The public method of this **`CameraCalibrator`** class is **`undistort`** and it takes a distorted image as the input and produces an undistorted image.
 
+<p align="center">
+ <img src="./images/camera_calibrator.png">
+</p>
+
 -----------------------------------------------------------------------------
 ## Advanced Lane Finding
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
