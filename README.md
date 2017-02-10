@@ -15,7 +15,7 @@ Image | Video
 ------------|---------------
 ![image_output](./images/image_output.png) | ![video_output](./images/video_output.gif)
 
-Next, we are going to describe our pipeline stages starting from the Camera Calibrator.
+Next, we are going to describe our pipeline stages starting from the Camera Calibrator. The sample input and output of the Camera Calibrator pipeline stage is given below.
 
 ### Camera Calibrator
 
