@@ -1,6 +1,5 @@
 # Self-Driving Car Engineer Nanodegree
-# Computer Vision
-## Advanced Lane Finding
+## Computer Vision: Advanced Lane Finding
 
 ### Overview
 
@@ -10,7 +9,7 @@ The objective of this project is to identify lane lines using traditional comput
  <img src="./images/pipeline.png">
 </p>
 
-X
+The input of our pipeline would be images or video clips. Input images or videos will go through various pipeline stages (will be discussed in the latter part of this document) and produce annotated video and images as given below.
 
 Image | Video
 ------------|---------------
