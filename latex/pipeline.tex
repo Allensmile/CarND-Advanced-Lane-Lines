@@ -25,7 +25,8 @@
     
     \node[node](resize)[below = 0.4cm of gamma]{\scriptsize Output: Image or Video with Highlighted Lane Line and Lane Line Information};
     
-    \path [line] (input) -- (shear);
+    \path [line] (input) -- (camera);
+    \path [line] (camera) -- (shear);
     \path [line] (shear) -- (crop);
     \path [line] (crop) -- (flip);
     \path [line] (flip) -- (gamma);
