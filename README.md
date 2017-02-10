@@ -124,7 +124,9 @@ out_clip.write_videofile(output_file, audio=False)
 ```
 
 <p align="center">
-[![video_output](https://img.youtube.com/vi/ZNmvFZJRKWA/0.jpg)](https://www.youtube.com/watch?v=ZNmvFZJRKWA)
+    <a href="https://www.youtube.com/watch?v=ZNmvFZJRKWA">
+        <img src="https://img.youtube.com/vi/ZNmvFZJRKWA/0.jpg" alt="video output">
+    </a>
 </p>
 
 ### Conclusions and Future Directions
