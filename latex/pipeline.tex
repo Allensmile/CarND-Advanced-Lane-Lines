@@ -13,7 +13,9 @@
     
     \node[node](input){\scriptsize Input: Image or Video};
     
-    \node[node](shear)[below = 0.4cm of input]{\scriptsize Warp Transformer};
+    \node[node](camera)[below = 0.4cm of input]{\scriptsize Camera Calibrator};
+    
+    \node[node](shear)[below = 0.4cm of camera]{\scriptsize Warp Transformer};
     
     \node[node](crop)[below = 0.4cm of shear]{\scriptsize Binarizer};
     
