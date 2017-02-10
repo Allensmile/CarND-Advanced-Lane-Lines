@@ -94,7 +94,58 @@ In this section, we explain the algorithm we used in the **`naive_lane_extractor
  <img src="./images/histogram.png">
 </p>
 
+```python
+for window in range(nwindows):
+    win_y_low = warped_image.shape[0] - (window + 1) * window_height
+    win_y_high = warped_image.shape[0] - window * window_height
 
+    win_xleft_low = leftx_current - margin
+    win_xleft_high = leftx_current + margin
+    win_xright_low = rightx_current - margin
+    win_xright_high = rightx_current + margin
+
+    good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & 
+                      (nonzerox >= win_xleft_low) & (nonzerox < win_xleft_high)).nonzero()[0]
+    good_right_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & 
+                       (nonzerox >= win_xright_low) & (nonzerox < win_xright_high)).nonzero()[0]
+
+    # Append these indices to the lists
+    left_lane_inds.append(good_left_inds)
+    right_lane_inds.append(good_right_inds)
+
+    if len(good_left_inds) > min_num_pixels:
+        leftx_current = np.int(np.mean(nonzerox[good_left_inds]))
+    if len(good_right_inds) > min_num_pixels:
+        rightx_current = np.int(np.mean(nonzerox[good_right_inds]))
+
+# Concatenate the ndarrays of indices
+left_lane_array = np.concatenate(left_lane_inds)
+right_lane_array = np.concatenate(right_lane_inds)
+
+# Extract left and right line pixel positions
+leftx = nonzerox[left_lane_array]
+lefty = nonzeroy[left_lane_array]
+rightx = nonzerox[right_lane_array]
+righty = nonzeroy[right_lane_array]
+
+# Fit a second order polynomial to each
+left_fit = np.polyfit(lefty, leftx, 2)
+right_fit = np.polyfit(righty, rightx, 2)
+
+fity = np.linspace(0, warped_image.shape[0] - 1, warped_image.shape[0])
+fit_leftx = left_fit[0] * fity ** 2 + left_fit[1] * fity + left_fit[2]
+fit_rightx = right_fit[0] * fity ** 2 + right_fit[1] * fity + right_fit[2]
+
+
+warped_image[nonzeroy[left_lane_array], nonzerox[left_lane_array]] = [255, 0, 0]
+warped_image[nonzeroy[right_lane_array], nonzerox[right_lane_array]] = [0, 0, 255]
+plt.imshow(warped_image)
+plt.plot(fit_leftx, fity, color='yellow')
+plt.plot(fit_rightx, fity, color='yellow')
+plt.xlim(0, 1280)
+plt.ylim(720, 0)
+plt.show()
+```
 
 
 
