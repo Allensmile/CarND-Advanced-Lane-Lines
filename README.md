@@ -78,69 +78,15 @@ In order to calculate road curvature, we have used two methods as given below.
 1. **`naive_lane_extractor(self, binary_warped)`** (inside the **Line** class in advanced_line_finding module)
 2. **`smart_lane_extractor(self, binary_warped)`** (inside the **Line** class in advanced_line_finding module
 
-Both methods take a binary warped image (similar to one shown above) and produce X coordinates of both left and right lane lines. `naive_lane_extractor(self, binary_warped)` method uses **sliding window** to identify lane lines from the binary warped image and then uses a second order polynomial estimation technique to calculate road curvature. 
+Both methods take a binary warped image (similar to one shown above) and produce X coordinates of both left and right lane lines. `naive_lane_extractor(self, binary_warped)` method uses **sliding window** to identify lane lines from the binary warped image and then uses a second order polynomial estimation technique to calculate road curvature.
 
-In this section, we explain the algorithm we used in the **`naive_lane_extractor(self, binary_warped)`** method.
+The complete description of our algorithm in given in [Advanced Lane Line Finding](https://github.com/upul/CarND-Advanced-Lane-Lines/blob/master/src/Advanced_Lane_Line_Finding.ipynb) notebook.
 
-* **`naive_lane_extractor(self, binary_warped)`** algorithm expects a binary warped image such as one shown below.
-
-<p align="center">
- <img src="./images/binary_input.png">
-</p>
-
-* Next, we calculate a histogram of pixel intencities using the first half (starting from the bottom of the image) the image as shown below.
+The output of lane line extractor algorithm is visualize in following figure.
 
 <p align="center">
- <img src="./images/histogram.png">
+ <img src="./images/lane_pixels.png">
 </p>
-
-```python
-for window in range(nwindows):
-    win_y_low = warped_image.shape[0] - (window + 1) * window_height
-    win_y_high = warped_image.shape[0] - window * window_height
-
-    win_xleft_low = leftx_current - margin
-    win_xleft_high = leftx_current + margin
-    win_xright_low = rightx_current - margin
-    win_xright_high = rightx_current + margin
-
-    good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & 
-                      (nonzerox >= win_xleft_low) & (nonzerox < win_xleft_high)).nonzero()[0]
-    good_right_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & 
-                       (nonzerox >= win_xright_low) & (nonzerox < win_xright_high)).nonzero()[0]
-
-    # Append these indices to the lists
-    left_lane_inds.append(good_left_inds)
-    right_lane_inds.append(good_right_inds)
-
-    if len(good_left_inds) > min_num_pixels:
-        leftx_current = np.int(np.mean(nonzerox[good_left_inds]))
-    if len(good_right_inds) > min_num_pixels:
-        rightx_current = np.int(np.mean(nonzerox[good_right_inds]))
-
-# Concatenate the ndarrays of indices
-left_lane_array = np.concatenate(left_lane_inds)
-right_lane_array = np.concatenate(right_lane_inds)
-
-# Extract left and right line pixel positions
-leftx = nonzerox[left_lane_array]
-lefty = nonzeroy[left_lane_array]
-rightx = nonzerox[right_lane_array]
-righty = nonzeroy[right_lane_array]
-
-# Fit a second order polynomial to each
-left_fit = np.polyfit(lefty, leftx, 2)
-right_fit = np.polyfit(righty, rightx, 2)
-
-fity = np.linspace(0, warped_image.shape[0] - 1, warped_image.shape[0])
-fit_leftx = left_fit[0] * fity ** 2 + left_fit[1] * fity + left_fit[2]
-fit_rightx = right_fit[0] * fity ** 2 + right_fit[1] * fity + right_fit[2]
-
-self.detected = True
-return fit_leftx, fit_rightx
-```
-
-
 
 ### Lane Line Curvature Calculator
 
