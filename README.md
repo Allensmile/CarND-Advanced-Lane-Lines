@@ -136,15 +136,8 @@ fity = np.linspace(0, warped_image.shape[0] - 1, warped_image.shape[0])
 fit_leftx = left_fit[0] * fity ** 2 + left_fit[1] * fity + left_fit[2]
 fit_rightx = right_fit[0] * fity ** 2 + right_fit[1] * fity + right_fit[2]
 
-
-warped_image[nonzeroy[left_lane_array], nonzerox[left_lane_array]] = [255, 0, 0]
-warped_image[nonzeroy[right_lane_array], nonzerox[right_lane_array]] = [0, 0, 255]
-plt.imshow(warped_image)
-plt.plot(fit_leftx, fity, color='yellow')
-plt.plot(fit_rightx, fity, color='yellow')
-plt.xlim(0, 1280)
-plt.ylim(720, 0)
-plt.show()
+self.detected = True
+return fit_leftx, fit_rightx
 ```
 
 
