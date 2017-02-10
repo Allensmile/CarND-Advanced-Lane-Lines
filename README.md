@@ -122,6 +122,9 @@ clip = VideoFileClip(input_file)
 out_clip = clip.fl_image(line.process) 
 out_clip.write_videofile(output_file, audio=False)
 ```
+
+<p align="center">
 [![video_output](https://img.youtube.com/vi/ZNmvFZJRKWA/0.jpg)](https://www.youtube.com/watch?v=ZNmvFZJRKWA)
+</p>
 
 ### Conclusions and Future Directions
