@@ -17,6 +17,16 @@ Image | Video
 
 Next, we are going to describe our pipeline stages starting from the Camera Calibrator.
 
+### Camera Calibrator
+
+Camera calibration logic is encapsulated in **`CameraCalibrator`** class in the **`advanced_lane_finding.py`** module. This class's constructor takes following arguments.
+
+1. A list of camera images which we are going to use for camera calibration. (Usually, we use chessboard images)
+2. Number of corners in X direction
+3. Number of corners in Y direction
+4. A boolean flag, if it is True, we do camera calibration and store those calibration data. 
+
+The public method of this **`CameraCalibrator`** class is **`undistort`** and it takes a distorted image as the input and produces an undistorted image.
 
 -----------------------------------------------------------------------------
 ## Advanced Lane Finding
