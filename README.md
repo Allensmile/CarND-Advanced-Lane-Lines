@@ -3,8 +3,16 @@
 ## Advanced Lane Finding
 
 ### Overview
+
 The objective of this project is to identify lane lines using traditional computer vision techniques. In order to achieve this, we have designed a computer vision pipeline as depicted below.
 
+![pipeline](./images/pipeline.png)
+
+X
+
+Image | Video
+------------|---------------
+![training_img](./images/track_one.gif) | ![validation_img](./images/track_two.gif)
 
 
 
