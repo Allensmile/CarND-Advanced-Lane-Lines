@@ -6,7 +6,9 @@
 
 The objective of this project is to identify lane lines using traditional computer vision techniques. In order to achieve this, we have designed a computer vision pipeline as depicted below.
 
-![pipeline](./images/pipeline.png)
+<p align="center">
+ <img src="./images/pipeline.png">
+</p>
 
 X
 
