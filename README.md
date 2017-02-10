@@ -14,7 +14,7 @@ X
 
 Image | Video
 ------------|---------------
-![image_putput](./images/image_putput.png) | ![validation_img](./images/track_two.gif)
+![image_putput](./images/image_output.png) | ![validation_img](./images/track_two.gif)
 
 
 
