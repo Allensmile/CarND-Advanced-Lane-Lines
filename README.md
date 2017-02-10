@@ -42,10 +42,10 @@ Warped operation is encapsulated in **`PerspectiveTransformer`** class of the **
 
 |Source Points | Destination Points|
 |--------------|-------------------|
-|(253, 697)      |    (303, 697)       |
-|(585, 456)      |(303, 0)             |
-|(700, 456)      |(1011, 0)            |
-|(1061, 690)     |(1011, 690)          |
+|(253, 697)    |   (303, 697)      |
+|(585, 456)    |   (303, 0)        |
+|(700, 456)    |   (1011, 0)       |
+|(1061, 690)   |   (1011, 690)     |
 
 
 I verified the performance of my perspective transformation by transforming an image (**`../output_images/undistorted_test_images/straight_lines2.jpg`**) using above source and destination points as given below.
@@ -80,9 +80,22 @@ In order to calculate road curvature, we have used two methods as given below.
 
 Both methods take a binary warped image (similar to one shown above) and produce X coordinates of both left and right lane lines. `naive_lane_extractor(self, binary_warped)` method uses **sliding window** to identify lane lines from the binary warped image and then uses a second order polynomial estimation technique to calculate road curvature. 
 
-In following code block, explain the algorithm we used in the **`naive_lane_extractor(self, binary_warped)`** method.
+In this section, we explain the algorithm we used in the **`naive_lane_extractor(self, binary_warped)`** method.
 
 * **`naive_lane_extractor(self, binary_warped)`** algorithm expects a binary warped image such as one shown below.
+
+<p align="center">
+ <img src="./images/binary_input.png">
+</p>
+
+* Next, we calculate a histogram of pixel intencities using the first half (starting from the bottom of the image) the image as shown below.
+
+<p align="center">
+ <img src="./images/histogram.png">
+</p>
+
+
+
 
 
 ### Lane Line Curvature Calculator
