@@ -14,7 +14,7 @@ X
 
 Image | Video
 ------------|---------------
-![training_img](./images/track_one.gif) | ![validation_img](./images/track_two.gif)
+![image_putput](./images/image_putput.png) | ![validation_img](./images/track_two.gif)
 
 
 
