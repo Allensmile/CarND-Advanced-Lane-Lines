@@ -95,6 +95,8 @@ The output of lane line extractor algorithm is visualize in following figure.
  <img src="./images/lane_pixels.png">
 </p>
 
+When it comes to video processing we start (with the very first image in the video) with **``naive_lane_extractor(self, binary_warped``** method. Once we have identified lane lines we moves to the **``smart_lane_extractor(self, binary_warped)``** which doesn't blindly search entire image but uses lane lines identify in the previous image in the video.
+
 ### Lane Line Curvature Calculator
 
 ### Highlighted Lane Line and Lane Line Information
