@@ -130,3 +130,9 @@ out_clip.write_videofile(output_file, audio=False)
 </p>
 
 ### Conclusions and Future Directions
+
+This was my very first computer vision problem.  This project took relatively a large amount of time when it compares to other (deep learning) projects. The hyper-parameter tuning process in my computer vision pipeline was tedious and time-consuming. Unfortunately, our pipeline didn't generalize across diffrent road conditions and I think it is one of the main drawbacks of traditional computer vision approach to self-driving cars (and mobile robotics in general)
+
+When it comes to extensions and future directions, I would like to highlight followings.
+
+1. 
