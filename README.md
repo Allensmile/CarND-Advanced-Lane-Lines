@@ -32,6 +32,12 @@ The public method of this **`CameraCalibrator`** class is **`undistort`** and it
  <img src="./images/camera_calibrator.png">
 </p>
 
+Following image shows before and after applying distortion correction to a typical road image.
+
+<p align="center">
+ <img src="./images/undistorted.png">
+</p>
+
 ### Warp Transformer
 
 The second step of the lane line finding pipeline is "perspective transformation" step. In computer vision,  an image perspective is a phenomenon where objects appear smaller the further away they are from a viewpoint.   
