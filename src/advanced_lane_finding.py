@@ -115,15 +115,14 @@ class PerspectiveTransformer:
         return cv2.warpPerspective(src_image, self.M_inverse, size, flags=cv2.INTER_LINEAR)
 
 
-def binary_noise_reduction(img, thresh=4):
+def noise_reduction(image, threshold=4):
     """
-    Reduces noise of a binary image by applying a filter which counts neighbours with a value
-    and only keeping those which are above the threshold.
+    This method is used to reduce the noise of binary images.
 
-    :param img:
+    :param image:
         binary image (0 or 1)
 
-    :param thresh:
+    :param threshold:
         min number of neighbours with value
 
     :return:
@@ -131,9 +130,9 @@ def binary_noise_reduction(img, thresh=4):
     k = np.array([[1, 1, 1],
                   [1, 0, 1],
                   [1, 1, 1]])
-    nb_neighbours = cv2.filter2D(img, ddepth=-1, kernel=k)
-    img[nb_neighbours < thresh] = 0
-    return img
+    nb_neighbours = cv2.filter2D(image, ddepth=-1, kernel=k)
+    image[nb_neighbours < threshold] = 0
+    return image
 
 
 def binarize(image, gray_thresh=(20, 255), s_thresh=(170, 255), l_thresh=(30, 255), sobel_kernel=3):
@@ -201,7 +200,7 @@ def binarize(image, gray_thresh=(20, 255), s_thresh=(170, 255), l_thresh=(30, 25
     binary[((l_binary == 1) & (s_binary == 1) | (sobel_x_binary == 1))] = 1
     binary = 255 * np.dstack((binary, binary, binary)).astype('uint8')
 
-    return binary_noise_reduction(binary)
+    return noise_reduction(binary)
 
 
 # Define a class to receive the characteristics of each line detection
