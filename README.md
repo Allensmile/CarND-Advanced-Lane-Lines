@@ -135,4 +135,6 @@ This was my very first computer vision problem.  This project took relatively a 
 
 When it comes to extensions and future directions, I would like to highlight followings.
 
-1. 
+1. As the very first step, in the future, I would like to improve my computer vision pipeline. Presently, it works with project video only. But, I would like to improve it in order to work with other videos as well.
+2. Secondly,  I would like to explore machine learning (both traditional and new deep learning) approaches suitable to address lane finding problem. 
+
