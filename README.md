@@ -99,6 +99,12 @@ When it comes to video processing we start (with the very first image in the vid
 
 ### Lane Line Curvature Calculator
 
+We have created a utility mehtod called **``def calculate_road_info(self, image_size, left_x, right_x)``** in sidel the **``Line``** class. It takes  size of the image (**``image_size``**), left lane line pixels (**``left_x``**) and right lane line pixels (**``right_x``**) as arguments returns following information.
+
+1. **``left_curverad``** : Curvature of the left road line in meters.
+2. **``right_curverad``** : Curvature of the right road line in meters.
+3. **``lane_deviation``** : Deviation of the vehicle from the center of the line in meters.
+
 ### Highlighted Lane Line and Lane Line Information
 
 In order to easy work with images as well as videos, we have created a Python class called **`Line`** inside the **`advanced_lane_finding`** module. It encapsulates all the methods we described above and few more helper methods as well.  
