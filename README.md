@@ -81,6 +81,7 @@ Also, below shows the `binarize` operation applied to a sample image.
 Now we have extracted lane line pixels. So next step would be calculating the road curvature and other necessary quantities (such as how much the vehicle off from the center of the lane)
 
 In order to calculate road curvature, we have used two methods as given below.
+
 1. **`naive_lane_extractor(self, binary_warped)`** (inside the **Line** class in advanced_line_finding module)
 2. **`smart_lane_extractor(self, binary_warped)`** (inside the **Line** class in advanced_line_finding module
 
